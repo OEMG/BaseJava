@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
  */
 public class MainArray {
     private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    static String uuid = null;
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        Resume r;
         while (true) {
             System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
@@ -19,44 +19,25 @@ public class MainArray {
                 System.out.println("Неверная команда.");
                 continue;
             }
-            String uuid = null;
             if (params.length == 2) {
                 uuid = params[1].intern();
             }
             switch (params[0]) {
-                case "list":
-                    printAll();
-                    break;
-                case "size":
-                    System.out.println(ARRAY_STORAGE.size());
-                    break;
-                case "save":
-                    r = new Resume();
-                    r.setUuid(uuid);
-                    ARRAY_STORAGE.save(r);
-                    printAll();
-                    break;
-                case "delete":
-                    ARRAY_STORAGE.delete(uuid);
-                    printAll();
-                    break;
-                case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
-                    break;
-                case "clear":
-                    ARRAY_STORAGE.clear();
-                    printAll();
-                    break;
-                case "exit":
+                case "list" -> printAll();
+                case "size" -> System.out.println(ARRAY_STORAGE.size());
+                case "save" -> saveResume();
+                case "delete" -> deleteResume();
+                case "get" -> System.out.println(ARRAY_STORAGE.get(uuid));
+                case "clear" -> clearStorage();
+                case "exit" -> {
                     return;
-                default:
-                    System.out.println("Неверная команда.");
-                    break;
+                }
+                default -> System.out.println("Неверная команда.");
             }
         }
     }
 
-    static void printAll() {
+    private static void printAll() {
         Resume[] all = ARRAY_STORAGE.getAll();
         System.out.println("----------------------------");
         if (all.length == 0) {
@@ -67,5 +48,22 @@ public class MainArray {
             }
         }
         System.out.println("----------------------------");
+    }
+
+    private static void saveResume(){
+        Resume resume = new Resume();
+        resume.setUuid(uuid);
+        ARRAY_STORAGE.save(resume);
+        printAll();
+    }
+
+    private static void deleteResume() {
+        ARRAY_STORAGE.delete(uuid);
+        printAll();
+    }
+
+    private static void clearStorage() {
+        ARRAY_STORAGE.clear();
+        printAll();
     }
 }
