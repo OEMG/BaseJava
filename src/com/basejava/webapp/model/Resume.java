@@ -1,10 +1,12 @@
-/**
- * Initial resume class
- */
+package com.basejava.webapp.model;
+
 public class Resume {
 
-    // Unique identifier
     private String uuid;
+
+    public Resume(String uuid) {
+        setUuid(uuid);
+    }
 
     public String getUuid() {
         return uuid;
