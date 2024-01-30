@@ -32,17 +32,6 @@ public class ArrayStorage {
         storage[countResume++] = resume;
     }
 
-    public void update(String uuid) {
-        int index = findIndexByUuid(uuid);
-        if (index != -1) {
-            System.out.print("Для " + uuid + " введите новый uuid: ");
-            String newUuid = new Scanner(System.in).next();
-            storage[index].setUuid(newUuid);
-            return;
-        }
-        System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
-    }
-
     public void delete(String uuid) {
         int index = findIndexByUuid(uuid);
         if (index != -1) {
@@ -60,6 +49,17 @@ public class ArrayStorage {
             return uuid;
         }
         return "Ошибка! Резюме " + uuid + " не найдено в хранилище.";
+    }
+
+    public void update(String uuid) {
+        int index = findIndexByUuid(uuid);
+        if (index != -1) {
+            System.out.print("Для " + uuid + " введите новый uuid: ");
+            String newUuid = new Scanner(System.in).next();
+            storage[index].setUuid(newUuid);
+            return;
+        }
+        System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
     }
 
     public void clear() {
