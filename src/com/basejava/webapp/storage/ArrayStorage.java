@@ -24,7 +24,7 @@ public class ArrayStorage {
             System.out.println("Ошибка! Невозможно добавить резюме " + uuid + ". Хранилище переполнено.");
             return;
         }
-        int index = findIndexByUuid(uuid);
+        int index = findIndex(uuid);
         if (index != -1) {
             System.out.println("Ошибка! Резюме с Uuid: " + uuid + " уже есть в хранилище.");
             return;
@@ -33,33 +33,33 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int index = findIndexByUuid(uuid);
-        if (index != -1) {
-            countResume--;
-            System.arraycopy(storage, index + 1, storage, index, countResume - index);
-            storage[countResume] = null;
+        int index = findIndex(uuid);
+        if (index == -1) {
+            System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
             return;
         }
-        System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
+        countResume--;
+        storage[index] = storage[countResume];
+        storage[countResume] = null;
     }
 
     public String get(String uuid) {
-        int index = findIndexByUuid(uuid);
-        if (index != -1) {
-            return uuid;
+        int index = findIndex(uuid);
+        if (index == -1) {
+            return "Ошибка! Резюме " + uuid + " не найдено в хранилище.";
         }
-        return "Ошибка! Резюме " + uuid + " не найдено в хранилище.";
+        return uuid;
     }
 
     public void update(String uuid) {
-        int index = findIndexByUuid(uuid);
-        if (index != -1) {
-            System.out.print("Для " + uuid + " введите новый uuid: ");
-            String newUuid = new Scanner(System.in).next();
-            storage[index].setUuid(newUuid);
+        int index = findIndex(uuid);
+        if (index == -1) {
+            System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
             return;
         }
-        System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
+        System.out.print("Для " + uuid + " введите новый uuid: ");
+        String newUuid = new Scanner(System.in).next();
+        storage[index].setUuid(newUuid);
     }
 
     public void clear() {
@@ -67,7 +67,7 @@ public class ArrayStorage {
         countResume = 0;
     }
 
-    private int findIndexByUuid(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
