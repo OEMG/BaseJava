@@ -1,6 +1,8 @@
 package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.SortedArrayStorage;
+import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.storage.ArrayStorage;
 
 import java.io.BufferedReader;
@@ -8,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MainArray {
-    private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
     static String uuid = null;
 
     public static void main(String[] args) throws IOException {
@@ -65,7 +67,8 @@ public class MainArray {
     }
 
     private static void updateResume() {
-        ARRAY_STORAGE.update(uuid);
+        Resume resume = new Resume(uuid);
+        ARRAY_STORAGE.update(resume);
         printAll();
     }
 

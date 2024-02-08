@@ -2,6 +2,7 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
+import com.basejava.webapp.storage.SortedArrayStorage;
 
 public class MainTestArrayStorage {
     public static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
@@ -20,9 +21,6 @@ public class MainTestArrayStorage {
 
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
-        printAll();
-        System.out.println();
-        ARRAY_STORAGE.update(r1.getUuid());
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
