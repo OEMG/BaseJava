@@ -17,7 +17,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOf(storage, countResume);
     }
 
-    public void save(Resume resume) {
+    public final void save(Resume resume) {
         String uuid = resume.getUuid();
         if (countResume >= CAPACITY) {
             System.out.println("Ошибка! Невозможно добавить резюме " + uuid + ". Хранилище переполнено.");
@@ -28,19 +28,21 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Ошибка! Резюме с Uuid: " + uuid + " уже есть в хранилище.");
             return;
         }
-        saveOperation(resume, index);
+        saveResume(resume, index);
+        countResume++;
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
             System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
             return;
         }
-        deleteOperation(index);
+        deleteResume(index);
+        storage[countResume--] = null;
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
         if (index < 0) {
@@ -50,7 +52,7 @@ public abstract class AbstractArrayStorage implements Storage {
         storage[index] = resume;
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
             System.out.println("Ошибка! Резюме " + uuid + " не найдено в хранилище.");
@@ -65,7 +67,9 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int findIndex(String uuid);
-    protected abstract void saveOperation(Resume resume, int index);
-    protected abstract void deleteOperation(int index);
+
+    protected abstract void saveResume(Resume resume, int index);
+
+    protected abstract void deleteResume(int index);
 
 }
