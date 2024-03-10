@@ -2,7 +2,6 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
-import com.basejava.webapp.storage.SortedArrayStorage;
 
 public class MainTestArrayStorage {
     public static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
