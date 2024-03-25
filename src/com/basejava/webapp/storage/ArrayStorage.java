@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int findIndex(String uuid) {
+    public int findIndex(String uuid) {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -15,12 +15,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void saveResume(Resume resume, int index) {
+    protected void save(Resume resume, int index) {
         storage[countResume] = resume;
     }
 
     @Override
-    protected void deleteResume(int index) {
+    protected void delete(int index) {
         storage[index] = storage[countResume - 1];
     }
 }
