@@ -7,47 +7,50 @@ import com.basejava.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public final void save(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        if (index >= 0) {
-            throw new ExistStorageException(uuid);
-        }
-        saveResume(resume, index);
+        Object searchKey = getExistingSearchKey(resume.getUuid());
+        saveResume(resume, searchKey);
     }
 
     public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (findIndex(uuid) < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        deleteResume(index);
+        Object searchKey = getNotExistingSearchKey(uuid);
+        deleteResume(searchKey);
     }
 
     public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getResume(index);
+        Object searchKey = getNotExistingSearchKey(uuid);
+        return getResume(searchKey);
     }
 
     public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        updateResume(resume, index);
+        Object searchKey = getNotExistingSearchKey(resume.getUuid());
+        updateResume(resume, searchKey);
     }
 
-    public abstract int findIndex(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
-    public abstract void deleteResume(int index);
+    protected abstract void deleteResume(Object searchKey);
 
-    public abstract Resume getResume(int index);
+    protected abstract Resume getResume(Object searchKey);
 
-    public abstract void saveResume(Resume resume, int index);
+    protected abstract void saveResume(Resume resume, Object searchKey);
 
-    public abstract void updateResume(Resume resume, int index);
+    protected abstract void updateResume(Resume resume, Object searchKey);
 
+    private Object getExistingSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    private Object getNotExistingSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    public abstract boolean isExist(Object searchKey);
 }

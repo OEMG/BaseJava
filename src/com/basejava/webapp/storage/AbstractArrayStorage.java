@@ -18,30 +18,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOf(storage, countResume);
     }
 
-    public void saveResume(Resume resume, int index) {
+    public void saveResume(Resume resume, Object searchKey) {
         if (countResume >= CAPACITY) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        save(resume, index);
+        save(resume, (Integer) searchKey);
         countResume++;
     }
 
-    public void deleteResume(int index) {
-        delete(index);
+    public void deleteResume(Object searchKey) {
+        delete((Integer) searchKey);
         storage[countResume--] = null;
     }
 
-    public void updateResume(Resume resume, int index) {
-        storage[index] = resume;
+    public void updateResume(Resume resume, Object searchKey) {
+        storage[(int) searchKey] = resume;
     }
 
-    public final Resume getResume(int index) {
-        return storage[index];
+    public final Resume getResume(Object searchKey) {
+        return storage[(int) searchKey];
     }
 
     public void clear() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
+    }
+
+    public boolean isExist(Object searchKey) {
+        return (Integer) searchKey >= 0;
     }
 
     //Под вопросом названия методов. Они аналогичны AbstractStorage
