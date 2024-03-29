@@ -35,7 +35,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public boolean isExist(Object searchKey) {
-        return searchKey != null;
+        return (Integer)searchKey >= 0;
     }
 
     @Override
@@ -56,6 +56,6 @@ public class ListStorage extends AbstractStorage {
                 return i;
             }
         }
-        return null;
+        return -1;
     }
 }
