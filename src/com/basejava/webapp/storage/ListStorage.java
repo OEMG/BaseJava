@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    public List<Resume> list = new ArrayList<>();
+    private final List<Resume> list = new ArrayList<>();
 
     @Override
     public int size() {
@@ -35,7 +35,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public boolean isExist(Object searchKey) {
-        return (Integer)searchKey >= 0;
+        return (Integer) searchKey >= 0;
     }
 
     @Override
