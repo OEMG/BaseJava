@@ -1,11 +1,10 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage{
     private final List<Resume> list = new ArrayList<>();
 
     @Override
@@ -14,8 +13,9 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return list.toArray(new Resume[0]);
+    public List<Resume> getAllSorted() {
+        list.sort(RESUME_COMPARATOR);
+        return list;
     }
 
     @Override

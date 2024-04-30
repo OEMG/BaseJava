@@ -1,10 +1,15 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
+import java.util.Comparator;
+
 public abstract class AbstractStorage implements Storage {
+
+    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
 
     public final void save(Resume resume) {
         Object searchKey = getExistingSearchKey(resume.getUuid());
@@ -21,7 +26,7 @@ public abstract class AbstractStorage implements Storage {
         return getResume(searchKey);
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         Object searchKey = getNotExistingSearchKey(resume.getUuid());
         updateResume(resume, searchKey);
     }

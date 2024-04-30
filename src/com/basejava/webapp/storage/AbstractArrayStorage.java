@@ -1,9 +1,11 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int CAPACITY = 10000;
@@ -14,20 +16,23 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return countResume;
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, countResume);
+    public List<Resume> getAllSorted() {
+        Resume[] storageCopy = Arrays.copyOf(storage,countResume);
+        List<Resume> sortedStorage = new ArrayList<>(Arrays.asList(storageCopy));
+        sortedStorage.sort(RESUME_COMPARATOR);
+        return sortedStorage;
     }
 
     public void saveResume(Resume resume, Object searchKey) {
         if (countResume >= CAPACITY) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        save(resume, (Integer) searchKey);
+        doSave(resume, (Integer) searchKey);
         countResume++;
     }
 
     public void deleteResume(Object searchKey) {
-        delete((Integer) searchKey);
+        doDelete((Integer) searchKey);
         storage[countResume--] = null;
     }
 
@@ -48,8 +53,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return (Integer) searchKey >= 0;
     }
 
-    //Под вопросом названия методов. Они аналогичны AbstractStorage
-    protected abstract void save(Resume resume, int index);
+    protected abstract void doSave(Resume resume, int index);
 
-    protected abstract void delete(int index);
+    protected abstract void doDelete(int index);
 }

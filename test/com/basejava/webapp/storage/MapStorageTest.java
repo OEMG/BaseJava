@@ -1,6 +1,8 @@
-package com.basejava.webapp.storage;
+package com.basejava.webapp.storage.storage;
 
-public class MapStorageTest extends AbstractStorageTest{
+import com.basejava.webapp.storage.MapStorage;
+
+class MapStorageTest extends AbstractStorageTest{
 
     public MapStorageTest() {
         super(new MapStorage());

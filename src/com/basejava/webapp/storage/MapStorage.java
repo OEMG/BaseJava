@@ -1,8 +1,10 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
@@ -14,8 +16,10 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return map.values().toArray(new Resume[0]);
+    public List<Resume> getAllSorted() {
+        List<Resume> sortedResumes = new ArrayList<>(map.values());
+        sortedResumes.sort(RESUME_COMPARATOR);
+        return sortedResumes;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void updateResume(Resume resume, Object searchKey) {
-        map.putIfAbsent(searchKey, resume);
+        map.put(searchKey, resume);
     }
 
     @Override

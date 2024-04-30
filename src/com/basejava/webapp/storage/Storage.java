@@ -1,9 +1,13 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
+import java.util.List;
+
 public interface Storage {
-    Resume[] getAll();
+    void clear();
+
+    List<Resume> getAllSorted();
 
     int size();
 
@@ -15,5 +19,4 @@ public interface Storage {
 
     void update(Resume resume);
 
-    void clear();
 }

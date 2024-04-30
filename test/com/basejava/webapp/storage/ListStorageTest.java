@@ -1,4 +1,6 @@
-package com.basejava.webapp.storage;
+package com.basejava.webapp.storage.storage;
+
+import com.basejava.webapp.storage.ListStorage;
 
 class ListStorageTest extends AbstractStorageTest {
 

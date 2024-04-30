@@ -1,19 +1,19 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public class SortedArrayStorage extends AbstractArrayStorage {
+public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
     public Object getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, countResume, searchKey);
+        Resume searchKey = new Resume(uuid, "fullName");
+        return Arrays.binarySearch(storage, 0, countResume, searchKey, RESUME_COMPARATOR);
     }
 
     @Override
-    protected void save(Resume resume, int index) {
+    protected void doSave(Resume resume, int index) {
         int newIndex = -index - 1;
         if (newIndex < countResume && countResume > 0) {
             System.arraycopy(storage, newIndex, storage, newIndex + 1, countResume - newIndex);
@@ -22,7 +22,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void delete(int index) {
+    protected void doDelete(int index) {
         System.arraycopy(storage, index + 1, storage, index, countResume - index);
     }
 }

@@ -1,4 +1,4 @@
-package com.basejava.webapp.storage;
+package main.java.com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
@@ -15,12 +15,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void save(Resume resume, int index) {
+    protected void doSave(Resume resume, int index) {
         storage[countResume] = resume;
     }
 
     @Override
-    protected void delete(int index) {
+    protected void doDelete(int index) {
         storage[index] = storage[countResume - 1];
     }
 }
