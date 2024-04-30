@@ -1,7 +1,7 @@
 package com.basejava.webapp;
 
-import main.java.com.basejava.webapp.storage.MapStorage;
-import main.java.com.basejava.webapp.storage.Storage;
+import com.basejava.webapp.storage.MapStorage;
+import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.model.Resume;
 
 import java.io.BufferedReader;

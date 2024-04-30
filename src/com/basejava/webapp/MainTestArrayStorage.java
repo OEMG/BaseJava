@@ -1,7 +1,7 @@
 package com.basejava.webapp;
 
-import main.java.com.basejava.webapp.storage.ListStorage;
-import main.java.com.basejava.webapp.storage.Storage;
+import com.basejava.webapp.storage.ListStorage;
+import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.model.Resume;
 
 public class MainTestArrayStorage {

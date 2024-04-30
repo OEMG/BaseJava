@@ -1,9 +1,7 @@
-package com.basejava.webapp.storage.storage;
+package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.AbstractArrayStorage;
-import com.basejava.webapp.storage.Storage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
