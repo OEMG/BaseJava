@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage{
+public class ListStorage extends AbstractStorage {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
@@ -13,8 +13,7 @@ public class ListStorage extends AbstractStorage{
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        list.sort(RESUME_COMPARATOR);
+    public List<Resume> copyList() {
         return list;
     }
 

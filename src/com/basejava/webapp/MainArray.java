@@ -1,8 +1,8 @@
 package com.basejava.webapp;
 
-import com.basejava.webapp.storage.MapStorage;
-import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.MapResumeStorage;
+import com.basejava.webapp.storage.Storage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class MainArray {
-    private final static Storage ARRAY_STORAGE = new MapStorage();
+    private final static Storage ARRAY_STORAGE = new MapResumeStorage();
     static String uuid = null;
 
     public static void main(String[] args) throws IOException {
