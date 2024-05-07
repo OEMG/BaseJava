@@ -1,19 +1,21 @@
 package com.basejava.webapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Resume {
 
     private final String uuid;
-    private String fullName;
+    private final String fullName;
 
 
     public Resume(String fullName) {
-        this.uuid = UUID.randomUUID().toString();
-        this.fullName = fullName;
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "Uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }

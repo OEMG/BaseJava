@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int CAPACITY = 10000;
     public final Resume[] storage = new Resume[CAPACITY];
     protected int countResume;
@@ -22,25 +22,25 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return new ArrayList<>(Arrays.asList(storageCopy));
     }
 
-    protected void saveResume(Resume resume, Object searchKey) {
+    protected void saveResume(Resume resume, Integer searchKey) {
         if (countResume >= CAPACITY) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        doSave(resume, (Integer) searchKey);
+        doSave(resume, searchKey);
         countResume++;
     }
 
-    protected void deleteResume(Object searchKey) {
-        doDelete((Integer) searchKey);
+    protected void deleteResume(Integer searchKey) {
+        doDelete(searchKey);
         storage[countResume--] = null;
     }
 
-    protected void updateResume(Resume resume, Object searchKey) {
-        storage[(int) searchKey] = resume;
+    protected void updateResume(Resume resume, Integer searchKey) {
+        storage[searchKey] = resume;
     }
 
-    protected final Resume getResume(Object searchKey) {
-        return storage[(int) searchKey];
+    protected final Resume getResume(Integer searchKey) {
+        return storage[searchKey];
     }
 
     public void clear() {
@@ -48,8 +48,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         countResume = 0;
     }
 
-    protected boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    protected boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     protected abstract void doSave(Resume resume, int index);

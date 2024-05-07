@@ -4,7 +4,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
@@ -18,28 +18,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void saveResume(Resume resume, Object searchKey) {
+    public void saveResume(Resume resume, Integer searchKey) {
         list.add(resume);
     }
 
     @Override
-    public void deleteResume(Object searchKey) {
-        list.remove(((Integer) searchKey).intValue());
+    public void deleteResume(Integer searchKey) {
+        list.remove(searchKey.intValue());
     }
 
     @Override
-    public void updateResume(Resume resume, Object searchKey) {
-        list.set((Integer) searchKey, resume);
+    public void updateResume(Resume resume, Integer searchKey) {
+        list.set(searchKey, resume);
     }
 
     @Override
-    public boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    public boolean isExist(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
-    public final Resume getResume(Object searchKey) {
-        return list.get((Integer) searchKey);
+    public final Resume getResume(Integer searchKey) {
+        return list.get(searchKey);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Object getSearchKey(String uuid) {
+    public Integer getSearchKey(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             String listUuid = list.get(i).getUuid();
             if (listUuid.equals(uuid)) {
