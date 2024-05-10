@@ -30,11 +30,7 @@ public class Resume {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Resume {");
-        sb.append("uuid = '").append(uuid).append('\'');
-        sb.append(", fullName = '").append(fullName).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Resume {" + "uuid = '" + uuid + '\'' + ", fullName = '" + fullName + '\'' + '}';
     }
 
     @Override
