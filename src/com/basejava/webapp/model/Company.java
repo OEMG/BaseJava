@@ -11,7 +11,7 @@ public class Company {
     public Company(String name, String website, List<Period> periods) {
         this.name = name;
         this.website = website;
-        this.periods = periods;;
+        this.periods = periods;
     }
 
     public String getName() {

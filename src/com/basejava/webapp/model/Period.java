@@ -56,7 +56,7 @@ public class Period {
     public String toString() {
         String pattern = "MM/yyyy";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        if (description.equals("")) {
+        if (description.isEmpty()) {
             return startDate.format(formatter) + " - " +
                     endDate.format(formatter) +
                     String.format("%" + 3 + "s", "") +
