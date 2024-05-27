@@ -1,13 +1,13 @@
 package com.basejava.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class Resume {
 
     private final String uuid;
     private final String fullName;
-
+    private final Map<ContactType, String> contacts = new LinkedHashMap<>();
+    private final Map<SectionType, AbstractSection> sections = new LinkedHashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -20,12 +20,28 @@ public class Resume {
         this.fullName = fullName;
     }
 
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
+    }
+
     public String getUuid() {
         return uuid;
     }
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
     }
 
     @Override
