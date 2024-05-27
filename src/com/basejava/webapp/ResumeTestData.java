@@ -96,8 +96,8 @@ public class ResumeTestData {
         resume.addSection(SectionType.QUALIFICATIONS, new ListSection(qualifications));
     }
 
-    private static void addPoint(String achievement, List<String> achievementPoints) {
-        achievementPoints.add(achievement);
+    private static void addPoint(String description, List<String> list) {
+        list.add(description);
     }
 
     private static void initCompanySections() {
