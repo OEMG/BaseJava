@@ -4,21 +4,22 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
-    private final List<String> points;
+    private final List<String> list;
 
-    public ListSection(List<String> points) {
-        this.points = points;
+    public ListSection(List<String> list) {
+        Objects.requireNonNull(list, "list must not be null");
+        this.list = list;
     }
 
-    public List<String> getPoints() {
-        return points;
+    public List<String> getList() {
+        return list;
     }
 
     @Override
     public String toString() {
 //        return points.toString();
         StringBuilder sb = new StringBuilder();
-        for (String point : points) {
+        for (String point : list) {
             sb.append("  * ").append(point).append("\n");
         }
         return sb.toString();
@@ -30,11 +31,11 @@ public class ListSection extends AbstractSection {
         if (o == null || getClass() != o.getClass()) return false;
 
         ListSection that = (ListSection) o;
-        return Objects.equals(points, that.points);
+        return list.equals(that.list);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(points);
+        return list.hashCode();
     }
 }

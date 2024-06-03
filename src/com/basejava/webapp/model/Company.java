@@ -9,6 +9,8 @@ public class Company {
     private final List<Period> periods;
 
     public Company(String name, String website, List<Period> periods) {
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(periods, "periods must not be null");
         this.name = name;
         this.website = website;
         this.periods = periods;
@@ -46,12 +48,9 @@ public class Company {
 
     @Override
     public String toString() {
-
-        final StringBuffer sb = new StringBuffer(String.format("%" + 20 + "s", ""));
-        sb.append(name).append(": ").append(website).append("\n");
-        for (Period period : periods) {
-            sb.append(period).append("\n");
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%-20s", "")).append(name).append(": ").append(website).append("\n");
+        periods.forEach(period -> sb.append(period).append("\n"));
         return sb.toString();
     }
 }

@@ -6,6 +6,7 @@ public class TextSection extends AbstractSection {
     private final String description;
 
     public TextSection(String description) {
+        Objects.requireNonNull(description, "description must not be null");
         this.description = description;
     }
 
@@ -24,11 +25,11 @@ public class TextSection extends AbstractSection {
         if (o == null || getClass() != o.getClass()) return false;
 
         TextSection that = (TextSection) o;
-        return Objects.equals(description, that.description);
+        return description.equals(that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(description);
+        return description.hashCode();
     }
 }

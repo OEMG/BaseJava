@@ -4,13 +4,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Period {
+public final class Period {
+
     private final String title;
     private final String description;
     private final LocalDate startDate;
     private final LocalDate endDate;
 
     public Period(String title, String description, LocalDate startDate, LocalDate endDate) {
+        Objects.requireNonNull(startDate, "startDate must not be null");
+        Objects.requireNonNull(endDate, "endDate must not be null");
+        Objects.requireNonNull(title, "title must not be null");
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -39,16 +43,16 @@ public class Period {
         if (o == null || getClass() != o.getClass()) return false;
 
         Period period = (Period) o;
-        return Objects.equals(title, period.title) && Objects.equals(description, period.description) &&
-                Objects.equals(startDate, period.startDate) && Objects.equals(endDate, period.endDate);
+        return title.equals(period.title) && Objects.equals(description, period.description) &&
+                startDate.equals(period.startDate) && endDate.equals(period.endDate);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(title);
+        int result = title.hashCode();
         result = 31 * result + Objects.hashCode(description);
-        result = 31 * result + Objects.hashCode(startDate);
-        result = 31 * result + Objects.hashCode(endDate);
+        result = 31 * result + startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
         return result;
     }
 

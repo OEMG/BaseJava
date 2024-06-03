@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.ResumeTestData;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
@@ -14,16 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
+    protected static final ResumeTestData TEST_DATA = new ResumeTestData();
     protected static final String UUID_1 = "uuid1";
     protected static final String UUID_2 = "uuid2";
     protected static final String UUID_3 = "uuid3";
     protected static final String UUID_4 = "uuid4";
     protected static final String TEST_UUID = "test";
     protected static final String FULL_NAME = "fullName";
-    protected static final Resume RESUME_1 = new Resume(UUID_1, FULL_NAME);
-    protected static final Resume RESUME_2 = new Resume(UUID_2, FULL_NAME);
-    protected static final Resume RESUME_3 = new Resume(UUID_3, FULL_NAME);
-    protected static final Resume RESUME_4 = new Resume(UUID_4, FULL_NAME);
+    protected static final Resume RESUME_1 = TEST_DATA.initSections(UUID_1, FULL_NAME);
+    protected static final Resume RESUME_2 = TEST_DATA.initSections(UUID_2, FULL_NAME);
+    protected static final Resume RESUME_3 = TEST_DATA.initSections(UUID_3, FULL_NAME);
+    protected static final Resume RESUME_4 = TEST_DATA.initSections(UUID_4, FULL_NAME);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -31,6 +33,7 @@ public abstract class AbstractStorageTest {
 
     @BeforeEach
     public void setUp() {
+
         storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
@@ -76,7 +79,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume expected = new Resume(UUID_1, FULL_NAME);
+        Resume expected = TEST_DATA.initSections(UUID_1, FULL_NAME);
         storage.update(expected);
         assertSame(expected, storage.get(UUID_1));
     }
