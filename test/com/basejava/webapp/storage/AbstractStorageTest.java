@@ -33,7 +33,6 @@ public abstract class AbstractStorageTest {
 
     @BeforeEach
     public void setUp() {
-
         storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);

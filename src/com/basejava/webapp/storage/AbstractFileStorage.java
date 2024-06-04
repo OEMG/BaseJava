@@ -31,12 +31,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void deleteResume(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("Error: File has not been deleted", file.getName());
+        }
     }
 
     @Override
     protected Resume getResume(File file) {
-        return doRead(file);
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("Error: File has not been read", file.getName(), e);
+        }
     }
 
     @Override
@@ -45,7 +51,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             file.createNewFile();
             doWrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Error: File has not been saved", file.getName(), e);
         }
     }
 
@@ -54,7 +60,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Error: File has not been write", file.getName(), e);
         }
     }
 
@@ -66,7 +72,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> copyList() {
         List<Resume> list = new ArrayList<>();
-        processFiles(file -> list.add(doRead(file)));
+        processFiles(file -> list.add(getResume(file)));
         return list;
     }
 
@@ -77,14 +83,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        return Objects.requireNonNull(new File(directory
-                .toURI())
-                .listFiles(), "directory must not be null")
-                .length;
+        return getCheckedListFiles().length;
     }
 
     private void processFiles(Consumer<File> fileConsumer) {
-        File[] files = Objects.requireNonNull(directory.listFiles());
+        File[] files = getCheckedListFiles();
         for (File file : files) {
             if (!file.isDirectory()) {
                 fileConsumer.accept(file);
@@ -92,7 +95,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
+    private File[] getCheckedListFiles() {
+        if (directory == null) {
+            throw new StorageException("Error: directory must not be null");
+        }
+        return directory.listFiles();
+    }
+
     protected abstract void doWrite(Resume resume, File file) throws IOException;
 
-    protected abstract Resume doRead(File file);
+    protected abstract Resume doRead(File file) throws IOException;
 }
