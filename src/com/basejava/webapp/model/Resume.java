@@ -1,8 +1,12 @@
 package com.basejava.webapp.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class Resume {
+public class Resume implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final String uuid;
     private final String fullName;
@@ -54,11 +58,11 @@ public class Resume {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid);
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(uuid, fullName);
     }
 }

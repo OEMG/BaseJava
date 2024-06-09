@@ -7,6 +7,7 @@ import com.basejava.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("storage");
     protected final Storage storage;
     protected static final ResumeTestData TEST_DATA = new ResumeTestData();
     protected static final String UUID_1 = "uuid1";
@@ -80,7 +82,7 @@ public abstract class AbstractStorageTest {
     void update() {
         Resume expected = TEST_DATA.initSections(UUID_1, FULL_NAME);
         storage.update(expected);
-        assertSame(expected, storage.get(UUID_1));
+        assertEquals(expected, storage.get(UUID_1));
     }
 
     @Test

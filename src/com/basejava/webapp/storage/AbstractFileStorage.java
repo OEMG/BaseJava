@@ -14,10 +14,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
-        if (directory.isDirectory()) {
+        if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
-        if (directory.canRead() && directory.canWrite()) {
+        if (!directory.canRead() && directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
@@ -38,7 +38,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getResume(File file) {
         try {
-            return doRead(file);
+            return doRead(new FileInputStream(file));
         } catch (IOException e) {
             throw new StorageException("Error: File has not been read", file.getName(), e);
         }
@@ -48,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveResume(Resume resume, File file) {
         try {
             file.createNewFile();
-            doWrite(resume, new FileOutputStream(file));
+            updateResume(resume, file);
         } catch (IOException e) {
             throw new StorageException("Error: File has not been saved", file.getName(), e);
         }
@@ -101,7 +101,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return directory.listFiles();
     }
 
-    protected abstract void doWrite(Resume resume, OutputStream file) throws IOException;
+    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
 
-    protected abstract Resume doRead(File file) throws IOException;
+    protected abstract Resume doRead(InputStream is) throws IOException;
 }
