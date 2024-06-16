@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Company implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    
+
     private final String name;
     private final String website;
     private final List<Period> periods;
