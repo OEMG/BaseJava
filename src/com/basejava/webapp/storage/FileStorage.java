@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serialization.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,14 +10,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ObjectStreamFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final File directory;
 
-    SerializationStrategy ss;
+    private final SerializationStrategy strategy;
 
-    protected ObjectStreamFileStorage(File directory, SerializationStrategy ss) {
+    protected FileStorage(File directory, SerializationStrategy strategy) {
         Objects.requireNonNull(directory, "directory must not be null");
-        this.ss = ss;
+        this.strategy = strategy;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -41,7 +42,7 @@ public class ObjectStreamFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getResume(File file) {
         try {
-            return ss.doRead(new FileInputStream(file));
+            return strategy.doRead(new FileInputStream(file));
         } catch (IOException e) {
             throw new StorageException("Error: File has not been read", file.getName(), e);
         }
@@ -51,16 +52,16 @@ public class ObjectStreamFileStorage extends AbstractStorage<File> {
     protected void saveResume(Resume resume, File file) {
         try {
             file.createNewFile();
-            updateResume(resume, file);
         } catch (IOException e) {
             throw new StorageException("Error: File has not been saved", file.getName(), e);
         }
+        updateResume(resume, file);
     }
 
     @Override
     protected void updateResume(Resume resume, File file) {
         try {
-            ss.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            strategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Error: File has not been write", file.getName(), e);
         }

@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serialization.SerializationStrategy;
 
 import java.io.*;
 import java.nio.file.DirectoryStream;
@@ -16,12 +17,12 @@ import java.util.stream.Stream;
 
 import static java.nio.file.Files.isRegularFile;
 
-public class ObjectStreamPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
-    SerializationStrategy ss;
+    private final SerializationStrategy ss;
 
-    protected ObjectStreamPathStorage(String dir, SerializationStrategy ss) {
+    protected PathStorage(String dir, SerializationStrategy ss) {
         Objects.requireNonNull(dir, "directory must not be null");
         this.ss = ss;
         directory = Paths.get(dir);
@@ -57,10 +58,10 @@ public class ObjectStreamPathStorage extends AbstractStorage<Path> {
     protected void saveResume(Resume resume, Path path) {
         try {
             Files.createFile(path);
-            updateResume(resume, path);
         } catch (IOException e) {
             throw new StorageException("Error saving resume", path.getFileName().toString(), e);
         }
+        updateResume(resume, path);
     }
 
     @Override
@@ -86,20 +87,12 @@ public class ObjectStreamPathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            stream.forEach(this::deleteResume);
-        } catch (IOException e) {
-            throw new StorageException("Error deleting files in directory: " + directory);
-        }
+        getListFiles().forEach(this::deleteResume);
     }
 
     @Override
     public int size() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            return (int) stream.count();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return (int) getListFiles().count();
     }
 
     private void processPaths(Consumer<Path> pathConsumer) {
@@ -111,6 +104,14 @@ public class ObjectStreamPathStorage extends AbstractStorage<Path> {
             });
         } catch (IOException e) {
             throw new StorageException("Error: Path has not been write", directory.getFileName().toString(), e);
+        }
+    }
+
+    private Stream<Path> getListFiles() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Error listing files in directory: " + directory);
         }
     }
 }
