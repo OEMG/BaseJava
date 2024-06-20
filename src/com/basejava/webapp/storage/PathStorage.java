@@ -111,7 +111,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Error listing files in directory: " + directory);
+            throw new StorageException("Error listing files in directory: " + directory, e);
         }
     }
 }
