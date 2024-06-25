@@ -5,8 +5,8 @@ import com.basejava.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements SerializationStrategy {
     @Override
@@ -32,55 +32,46 @@ public class DataStreamSerializer implements SerializationStrategy {
     }
 
     private static void writeContacts(Resume resume, DataOutputStream dos) throws IOException {
-        Map<ContactType, String> contacts = resume.getContacts();
-        dos.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        writeCollection(dos, resume.getContacts().entrySet(), entry -> {
             dos.writeUTF(entry.getKey().name());
             dos.writeUTF(entry.getValue());
-        }
+        });
     }
 
     private static void writeSections(Resume resume, DataOutputStream dos) throws IOException {
-        Map<SectionType, AbstractSection> sections = resume.getSections();
-        dos.writeInt(sections.size());
-        for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+        writeCollection(dos, resume.getSections().entrySet(), entry -> {
             SectionType sectionType = entry.getKey();
             AbstractSection section = entry.getValue();
             dos.writeUTF(sectionType.name());
             switch (sectionType) {
                 case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) section).getDescription());
-                case ACHIEVEMENT, QUALIFICATIONS -> writeListSection((ListSection) section, dos);
-                case EXPERIENCE, EDUCATION -> writeCompanySection((CompanySection) section, dos);
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    List<String> list = ((ListSection) section).getList();
+                    writeCollection(dos, list, dos::writeUTF);
+                }
+                case EXPERIENCE, EDUCATION -> writeCollection(dos, ((CompanySection) section).getCompanies(), company -> {
+                    dos.writeUTF(company.getName());
+                    dos.writeUTF(company.getWebsite() != null ? company.getWebsite() : "");
+                    writeCollection(dos, company.getPeriods(), period -> {
+                        dos.writeUTF(period.getTitle());
+                        dos.writeUTF(period.getDescription() != null ? period.getDescription() : "");
+                        dos.writeUTF(String.valueOf(period.getStartDate()));
+                        dos.writeUTF(String.valueOf(period.getEndDate()));
+                    });
+                });
             }
-        }
+        });
     }
 
-    private static void writeListSection(ListSection section, DataOutputStream dos) throws IOException {
-        List<String> list = section.getList();
-        dos.writeInt(list.size());
-        for (String point : list) {
-            dos.writeUTF(point);
-        }
+    @FunctionalInterface
+    interface ThrowingConsumer<T> {
+        void accept(T t) throws IOException;
     }
 
-    private static void writeCompanySection(CompanySection section, DataOutputStream dos) throws IOException {
-        List<Company> companies = section.getCompanies();
-        dos.writeInt(companies.size());
-        for (Company company : companies) {
-            dos.writeUTF(company.getName());
-            dos.writeUTF(company.getWebsite());
-            writePeriods(company, dos);
-        }
-    }
-
-    private static void writePeriods(Company company, DataOutputStream dos) throws IOException {
-        List<Period> periods = company.getPeriods();
-        dos.writeInt(periods.size());
-        for (Period period : periods) {
-            dos.writeUTF(period.getTitle());
-            dos.writeUTF(period.getDescription());
-            dos.writeUTF(String.valueOf(period.getStartDate()));
-            dos.writeUTF(String.valueOf(period.getEndDate()));
+    private static <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ThrowingConsumer<T> consumer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T t : collection) {
+            consumer.accept(t);
         }
     }
 
