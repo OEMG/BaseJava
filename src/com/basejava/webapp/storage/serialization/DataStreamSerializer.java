@@ -19,26 +19,14 @@ public class DataStreamSerializer implements SerializationStrategy {
         }
     }
 
-    @Override
-    public Resume doRead(InputStream is) throws IOException {
-        try (DataInputStream dis = new DataInputStream(is)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
-            readContacts(resume, dis);
-            readSections(resume, dis);
-            return resume;
-        }
-    }
-
-    private static void writeContacts(Resume resume, DataOutputStream dos) throws IOException {
-        writeCollection(dos, resume.getContacts().entrySet(), entry -> {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
+    private void writeContacts(Resume resume, DataOutputStream dos) throws IOException {
+        writeCollection(dos, resume.getContacts().entrySet(), contact -> {
+            dos.writeUTF(contact.getKey().name());
+            dos.writeUTF(contact.getValue());
         });
     }
 
-    private static void writeSections(Resume resume, DataOutputStream dos) throws IOException {
+    private void writeSections(Resume resume, DataOutputStream dos) throws IOException {
         writeCollection(dos, resume.getSections().entrySet(), entry -> {
             SectionType sectionType = entry.getKey();
             AbstractSection section = entry.getValue();
@@ -49,81 +37,95 @@ public class DataStreamSerializer implements SerializationStrategy {
                     List<String> list = ((ListSection) section).getList();
                     writeCollection(dos, list, dos::writeUTF);
                 }
-                case EXPERIENCE, EDUCATION -> writeCollection(dos, ((CompanySection) section).getCompanies(), company -> {
-                    dos.writeUTF(company.getName());
-                    dos.writeUTF(company.getWebsite() != null ? company.getWebsite() : "");
-                    writeCollection(dos, company.getPeriods(), period -> {
-                        dos.writeUTF(period.getTitle());
-                        dos.writeUTF(period.getDescription() != null ? period.getDescription() : "");
-                        dos.writeUTF(String.valueOf(period.getStartDate()));
-                        dos.writeUTF(String.valueOf(period.getEndDate()));
-                    });
-                });
+                case EXPERIENCE, EDUCATION ->
+                        writeCollection(dos, ((CompanySection) section).getCompanies(), company -> {
+                            dos.writeUTF(company.getName());
+                            dos.writeUTF(company.getWebsite() != null ? company.getWebsite() : "");
+                            writeCollection(dos, company.getPeriods(), period -> {
+                                dos.writeUTF(period.getTitle());
+                                dos.writeUTF(period.getDescription() != null ? period.getDescription() : "");
+                                dos.writeUTF(String.valueOf(period.getStartDate()));
+                                dos.writeUTF(String.valueOf(period.getEndDate()));
+                            });
+                        });
             }
         });
     }
 
     @FunctionalInterface
-    interface ThrowingConsumer<T> {
-        void accept(T t) throws IOException;
+    private interface DataWriter<T> {
+        void write(T t) throws IOException;
     }
 
-    private static <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ThrowingConsumer<T> consumer) throws IOException {
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, DataWriter<T> writer) throws IOException {
         dos.writeInt(collection.size());
         for (T t : collection) {
-            consumer.accept(t);
+            writer.write(t);
         }
     }
 
-    private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
-        int contactsSize = dis.readInt();
-        for (int i = 0; i < contactsSize; i++) {
-            resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+    @Override
+    public Resume doRead(InputStream is) throws IOException {
+        try (DataInputStream dis = new DataInputStream(is)) {
+            String uuid = dis.readUTF();
+            String fullName = dis.readUTF();
+            Resume resume = new Resume(uuid, fullName);
+            readEntries(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readEntries(dis, () -> {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                resume.addSection(sectionType, readSections(dis, sectionType));
+            });
+            return resume;
         }
     }
 
-    private static void readSections(Resume resume, DataInputStream dis) throws IOException {
-        int sectionSize = dis.readInt();
-        for (int i = 0; i < sectionSize; i++) {
-            SectionType sectionType = SectionType.valueOf(dis.readUTF());
-            switch (sectionType) {
-                case OBJECTIVE, PERSONAL -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                case ACHIEVEMENT, QUALIFICATIONS -> readListSections(dis, resume, sectionType);
-                case EXPERIENCE, EDUCATION -> readCompanySection(dis, resume, sectionType);
+    @FunctionalInterface
+    private interface DataHandler {
+        void handle() throws IOException;
+    }
+
+    private void readEntries(DataInputStream dis, DataHandler handler) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            handler.handle();
+        }
+    }
+
+    @FunctionalInterface
+    private interface DataReader<T> {
+        T read() throws IOException;
+    }
+
+    private <T> List<T> readList(DataInputStream dis, DataReader<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
+    }
+
+    private AbstractSection readSections(DataInputStream dis, SectionType sectionType) throws IOException {
+        switch (sectionType) {
+            case OBJECTIVE, PERSONAL -> {
+                return new TextSection(dis.readUTF());
+            }
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                return new ListSection(readList(dis, dis::readUTF));
+            }
+            case EXPERIENCE, EDUCATION -> {
+                return new CompanySection(
+                        readList(dis, () -> new Company(
+                                dis.readUTF(),
+                                dis.readUTF(),
+                                readList(dis, () -> new Period(
+                                        dis.readUTF(),
+                                        dis.readUTF(),
+                                        LocalDate.parse(dis.readUTF()),
+                                        LocalDate.parse(dis.readUTF()))
+                                ))));
             }
         }
-    }
-
-    private static void readListSections(DataInputStream dis, Resume resume, SectionType sectionType) throws IOException {
-        int listSize = dis.readInt();
-        List<String> list = new ArrayList<>(listSize);
-        for (int j = 0; j < listSize; j++) {
-            list.add(dis.readUTF());
-        }
-        resume.addSection(sectionType, new ListSection(list));
-    }
-
-    private static void readCompanySection(DataInputStream dis, Resume resume, SectionType sectionType) throws IOException {
-        int companiesSize = dis.readInt();
-        List<Company> companies = new ArrayList<>(companiesSize);
-        for (int j = 0; j < companiesSize; j++) {
-            String name = dis.readUTF();
-            String website = dis.readUTF();
-            readPeriods(dis, companies, name, website);
-        }
-        resume.addSection(sectionType, new CompanySection(companies));
-    }
-
-    private static void readPeriods(DataInputStream dis, List<Company> companies, String name, String website) throws IOException {
-        int periodsSize = dis.readInt();
-        List<Period> periods = new ArrayList<>(periodsSize);
-        for (int k = 0; k < periodsSize; k++) {
-            String title = dis.readUTF();
-            String description = dis.readUTF();
-            LocalDate startDate = LocalDate.parse(dis.readUTF());
-            LocalDate endDate = LocalDate.parse(dis.readUTF());
-            periods.add(new Period(title, description, startDate, endDate));
-        }
-        companies.add(new Company(name, website, periods));
+        return new AbstractSection() {};
     }
 }
