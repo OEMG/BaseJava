@@ -11,21 +11,21 @@ public class ResumeTestData {
 
     public Resume initSections(String uuid, String fullName) {
         resume = new Resume(uuid, fullName);
-        initContacts();
-        initTextSections();
-        initListSections();
-        initCompanySections();
+//        initContacts();
+//        initTextSections();
+//        initListSections();
+//        initCompanySections();
         return resume;
     }
 
     private void initContacts() {
-        resume.addContact(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
+        resume.addContact(ContactType.PHONE_NUMBER, "+7(999) 999-9999");
         resume.addContact(ContactType.SKYPE, "skype:grigory.kislin");
-        resume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
-        resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
-        resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
-        resume.addContact(ContactType.HOME_PAGE, "http://gkislin.ru/");
+        resume.addContact(ContactType.MAIL, "oemg@yandex.ru");
+        resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/oemg");
+        resume.addContact(ContactType.GITHUB, "https://github.com/oemg");
+        resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/777777/tito-kila");
+        resume.addContact(ContactType.HOME_PAGE, "http://oemg.ru/");
     }
 
     private void initTextSections() {
