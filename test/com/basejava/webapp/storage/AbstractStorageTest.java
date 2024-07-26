@@ -9,21 +9,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected final Storage storage;
     protected static final ResumeTestData TEST_DATA = new ResumeTestData();
-    protected static final String UUID_1 = "uuid1";
-    protected static final String UUID_2 = "uuid2";
-    protected static final String UUID_3 = "uuid3";
-    protected static final String UUID_4 = "uuid4";
-    protected static final String TEST_UUID = "test";
+    protected static final String UUID_1 = String.valueOf(UUID.randomUUID());
+    protected static final String UUID_2 = String.valueOf(UUID.randomUUID());
+    protected static final String UUID_3 = String.valueOf(UUID.randomUUID());
+    protected static final String UUID_4 = String.valueOf(UUID.randomUUID());
+    protected static final String TEST_UUID = String.valueOf(UUID.randomUUID());
     protected static final String FULL_NAME = "fullName";
     protected static final Resume RESUME_1 = TEST_DATA.initSections(UUID_1, FULL_NAME);
     protected static final Resume RESUME_2 = TEST_DATA.initSections(UUID_2, FULL_NAME);
@@ -50,6 +49,7 @@ public abstract class AbstractStorageTest {
     @Test
     void getAllSorted() {
         List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(expected);
         List<Resume> actual = storage.getAllSorted();
         assertEquals(3, actual.size());
         assertEquals(expected, actual);

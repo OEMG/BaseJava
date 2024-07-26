@@ -9,7 +9,7 @@ import java.util.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Resume implements Serializable {
+public class Resume implements Serializable, Comparable<Resume> {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -73,7 +73,8 @@ public class Resume implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(uuid, fullName, contacts, sections);
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }
