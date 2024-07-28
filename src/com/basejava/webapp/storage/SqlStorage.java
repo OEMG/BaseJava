@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
-    public final SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -46,7 +46,7 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
-            ps.executeUpdate();
+            ps.execute();
             return null;
         });
     }

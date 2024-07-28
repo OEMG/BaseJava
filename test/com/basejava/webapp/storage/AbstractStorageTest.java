@@ -23,11 +23,14 @@ public abstract class AbstractStorageTest {
     protected static final String UUID_3 = String.valueOf(UUID.randomUUID());
     protected static final String UUID_4 = String.valueOf(UUID.randomUUID());
     protected static final String TEST_UUID = String.valueOf(UUID.randomUUID());
-    protected static final String FULL_NAME = "fullName";
-    protected static final Resume RESUME_1 = TEST_DATA.initSections(UUID_1, FULL_NAME);
-    protected static final Resume RESUME_2 = TEST_DATA.initSections(UUID_2, FULL_NAME);
-    protected static final Resume RESUME_3 = TEST_DATA.initSections(UUID_3, FULL_NAME);
-    protected static final Resume RESUME_4 = TEST_DATA.initSections(UUID_4, FULL_NAME);
+    protected static final String FULL_NAME_1 = "fullName1";
+    protected static final String FULL_NAME_2 = "fullName2";
+    protected static final String FULL_NAME_3 = "fullName3";
+    protected static final String FULL_NAME_4 = "fullName4";
+    protected static final Resume RESUME_1 = TEST_DATA.initSections(UUID_1, FULL_NAME_1);
+    protected static final Resume RESUME_2 = TEST_DATA.initSections(UUID_2, FULL_NAME_2);
+    protected static final Resume RESUME_3 = TEST_DATA.initSections(UUID_3, FULL_NAME_3);
+    protected static final Resume RESUME_4 = TEST_DATA.initSections(UUID_4, FULL_NAME_4);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -49,7 +52,6 @@ public abstract class AbstractStorageTest {
     @Test
     void getAllSorted() {
         List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
-        Collections.sort(expected);
         List<Resume> actual = storage.getAllSorted();
         assertEquals(3, actual.size());
         assertEquals(expected, actual);
@@ -81,7 +83,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume expected = TEST_DATA.initSections(UUID_1, FULL_NAME);
+        Resume expected = TEST_DATA.initSections(UUID_1, FULL_NAME_1);
         storage.update(expected);
         assertEquals(expected, storage.get(UUID_1));
     }
