@@ -11,7 +11,7 @@ public class ResumeTestData {
 
     public Resume initSections(String uuid, String fullName) {
         resume = new Resume(uuid, fullName);
-//        initContacts();
+        initContacts();
 //        initTextSections();
 //        initListSections();
 //        initCompanySections();
@@ -20,7 +20,7 @@ public class ResumeTestData {
 
     private void initContacts() {
         resume.addContact(ContactType.PHONE_NUMBER, "+7(999) 999-9999");
-        resume.addContact(ContactType.SKYPE, "skype:grigory.kislin");
+        resume.addContact(ContactType.SKYPE, "skype:oemg.oemg");
         resume.addContact(ContactType.MAIL, "oemg@yandex.ru");
         resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/oemg");
         resume.addContact(ContactType.GITHUB, "https://github.com/oemg");
