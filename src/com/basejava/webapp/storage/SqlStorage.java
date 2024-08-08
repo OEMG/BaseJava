@@ -23,7 +23,7 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(conn -> {
-            Map<String, Resume> resumes = new HashMap<>();
+            Map<String, Resume> resumes = new LinkedHashMap<>();
             try (PreparedStatement ps = conn.prepareStatement("""
                             SELECT uuid, full_name, type, value FROM resume r
                          LEFT JOIN contact c
@@ -38,10 +38,7 @@ public class SqlStorage implements Storage {
                     addContact(rs, resume);
                 }
             }
-            List<Resume> list = new ArrayList<>(resumes.values());
-            Collections.sort(list);
-            System.out.println(list);
-            return list;
+            return new ArrayList<>(resumes.values());
         });
     }
 
@@ -132,10 +129,9 @@ public class SqlStorage implements Storage {
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
-        ContactType type = ContactType.valueOf(rs.getString("type"));
         String value = rs.getString("value");
         if (value != null) {
-            resume.addContact(type, value);
+            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 }
