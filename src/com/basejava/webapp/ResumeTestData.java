@@ -12,8 +12,8 @@ public class ResumeTestData {
     public Resume initSections(String uuid, String fullName) {
         resume = new Resume(uuid, fullName);
         initContacts();
-//        initTextSections();
-//        initListSections();
+        initTextSections();
+        initListSections();
 //        initCompanySections();
         return resume;
     }
