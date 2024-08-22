@@ -1,16 +1,11 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.model.ContactType;
-import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.model.SectionType;
+import com.basejava.webapp.model.*;
 import com.basejava.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -71,7 +66,7 @@ public class SqlStorage implements Storage {
                 ps.execute();
             }
             insertContacts(conn, resume);
-            // TODO: insertSections
+            insertSections(conn, resume);
             return null;
         });
     }
@@ -130,7 +125,7 @@ public class SqlStorage implements Storage {
             deleteFromTable("contact", resume);
             deleteFromTable("section", resume);
             insertContacts(conn, resume);
-            // TODO: insertSections
+            insertSections(conn, resume);
             return null;
         });
     }
@@ -155,17 +150,24 @@ public class SqlStorage implements Storage {
         }
     }
 
-//    private void insertSections(Connection conn, Resume resume) throws SQLException {
-//        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, description) VALUES (?,?,?)")) {
-//            for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-//                ps.setString(1, resume.getUuid());
-//                ps.setString(2, e.getKey().name());
-//                ps.setString(3, e.getValue());
-//                ps.addBatch();
-//            }
-//            ps.executeBatch();
-//        }
-//    }
+    private void insertSections(Connection conn, Resume resume) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, description) VALUES (?,?,?)")) {
+            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
+                SectionType type = entry.getKey();
+                AbstractSection section = entry.getValue();
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, type.name());
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> ps.setString(3, ((TextSection) section).getDescription());
+                    case ACHIEVEMENT, QUALIFICATIONS ->
+                            ps.setString(3, String.join("\n", ((ListSection) section).getList()));
+                    default -> throw new IllegalStateException("Unexpected value: " + type);
+                }
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
         String value = rs.getString("value");
@@ -178,8 +180,12 @@ public class SqlStorage implements Storage {
         String description = rs.getString("description");
         if (description != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            // TODO: получить второй параметр (section)
-//            resume.addSection(type, section);
+            AbstractSection section = switch (type) {
+                case OBJECTIVE, PERSONAL -> new TextSection(description);
+                case ACHIEVEMENT, QUALIFICATIONS -> new ListSection(Arrays.asList(description.split("\n")));
+                default -> throw new IllegalStateException("Unexpected value: " + type);
+            };
+            resume.addSection(type, section);
         }
     }
 }
