@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.sql.SqlHelper;
+import com.basejava.webapp.util.JsonParser;
 
 import java.sql.*;
 import java.util.*;
@@ -162,12 +163,7 @@ public class SqlStorage implements Storage {
                 AbstractSection section = entry.getValue();
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, type.name());
-                switch (type) {
-                    case PERSONAL, OBJECTIVE -> ps.setString(3, ((TextSection) section).getDescription());
-                    case ACHIEVEMENT, QUALIFICATIONS ->
-                            ps.setString(3, String.join("\n", ((ListSection) section).getList()));
-                    default -> throw new IllegalStateException("Unexpected value: " + type);
-                }
+                ps.setString(3, JsonParser.write(section, AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -185,12 +181,7 @@ public class SqlStorage implements Storage {
         String description = rs.getString("description");
         if (description != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            AbstractSection section = switch (type) {
-                case OBJECTIVE, PERSONAL -> new TextSection(description);
-                case ACHIEVEMENT, QUALIFICATIONS -> new ListSection(Arrays.asList(description.split("\n")));
-                default -> throw new IllegalStateException("Unexpected value: " + type);
-            };
-            resume.addSection(type, section);
+            resume.addSection(type, JsonParser.read(description, AbstractSection.class));
         }
     }
 }
