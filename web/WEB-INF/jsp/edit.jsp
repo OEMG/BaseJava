@@ -49,6 +49,7 @@
                 <c:when test="${type == 'OBJECTIVE' || type == 'PERSONAL'}">
                     <textarea name="${type}" cols="80" rows="5">${section}</textarea>
                 </c:when>
+
                 <%--                <c:when test="${type == 'QUALIFICATIONS' || type == 'ACHIEVEMENT'}">--%>
                 <%--                    <textarea name="${type}" cols="80" rows="5">--%>
                 <%--                        <c:forEach var="item" items="${section.list}">--%>
@@ -56,6 +57,7 @@
                 <%--                        </c:forEach>--%>
                 <%--                    </textarea>--%>
                 <%--                </c:when>--%>
+
                 <c:when test="${type == 'QUALIFICATIONS' || type == 'ACHIEVEMENT'}">
                     <textarea name="${type}" cols="80" rows="5">
                         <c:forEach var="item" items="${section.list}" varStatus="status">
@@ -70,9 +72,9 @@
                     <c:forEach var="org" items="${section.companies}" varStatus="counter">
                         <dl>
                             <dt>Название учереждения:</dt>
-                                <%--                            <dd><input type="text" name='${type}' size=100 value="${org.name}"></dd>--%>
-                            <input type="text" name="${type}${counter.index}name" size="100"
-                                   value="${org.name != null ? org.name : ''}">
+                                                            <dd><input type="text" name='${type}' size=100 value="${org.name}"></dd>
+<%--                            <input type="text" name="${type}${counter.index}name" size="100"--%>
+<%--                                   value="${org.name != null ? org.name : ''}">--%>
                         </dl>
                         <dl>
                             <dt>Сайт учереждения:</dt>

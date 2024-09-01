@@ -71,7 +71,7 @@ public class ResumeServlet extends HttpServlet {
                         resume.addSection(type, new ListSection(value.split("\\n")));
                     }
                     case EDUCATION, EXPERIENCE -> {
-                        List<Company> org = new ArrayList<>();
+                        List<Company> companies = new ArrayList<>();
                         String[] urls = request.getParameterValues(type.name() + "url");
                         for (int i = 0; i < values.length; i++) {
                             String name = values[i];
@@ -88,10 +88,10 @@ public class ResumeServlet extends HttpServlet {
                                     }
                                 }
                                 String url = (urls != null && urls.length > i) ? urls[i] : "";
-                                org.add(new Company(name, url, periods));
+                                companies.add(new Company(name, url, periods));
                             }
                         }
-                        resume.addSection(type, new CompanySection(org));
+                        resume.addSection(type, new CompanySection(companies));
                     }
                 }
             }
