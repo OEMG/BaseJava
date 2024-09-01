@@ -20,8 +20,8 @@ public class Resume implements Serializable, Comparable<Resume> {
         EMPTY.addSection(SectionType.PERSONAL, TextSection.EMPTY);
         EMPTY.addSection(SectionType.ACHIEVEMENT, ListSection.EMPTY);
         EMPTY.addSection(SectionType.QUALIFICATIONS, ListSection.EMPTY);
-        EMPTY.addSection(SectionType.EXPERIENCE, CompanySection.EMPTY);
-        EMPTY.addSection(SectionType.EDUCATION, CompanySection.EMPTY);
+        EMPTY.addSection(SectionType.EXPERIENCE, new CompanySection(Company.EMPTY));
+        EMPTY.addSection(SectionType.EDUCATION, new CompanySection(Company.EMPTY));
     }
 
     private String uuid;

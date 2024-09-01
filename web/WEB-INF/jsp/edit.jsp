@@ -72,9 +72,7 @@
                     <c:forEach var="org" items="${section.companies}" varStatus="counter">
                         <dl>
                             <dt>Название учереждения:</dt>
-                                                            <dd><input type="text" name='${type}' size=100 value="${org.name}"></dd>
-<%--                            <input type="text" name="${type}${counter.index}name" size="100"--%>
-<%--                                   value="${org.name != null ? org.name : ''}">--%>
+                                <dd><input type="text" name='${type}' size=100 value="${org.name}"></dd>
                         </dl>
                         <dl>
                             <dt>Сайт учереждения:</dt>
