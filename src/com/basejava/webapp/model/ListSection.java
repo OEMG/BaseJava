@@ -1,16 +1,21 @@
 package com.basejava.webapp.model;
 
 import java.io.Serial;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
     @Serial
     private static final long serialVersionUID = 1L;
-
+    public static final ListSection EMPTY = new ListSection("");
     private List<String> list;
 
     public ListSection() {
+    }
+
+    public ListSection(String... list) {
+        this(Arrays.asList(list));
     }
 
     public ListSection(List<String> list) {

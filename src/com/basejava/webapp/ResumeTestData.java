@@ -14,7 +14,7 @@ public class ResumeTestData {
         initContacts();
         initTextSections();
         initListSections();
-//        initCompanySections();
+        initCompanySections();
         return resume;
     }
 
@@ -98,20 +98,20 @@ public class ResumeTestData {
 
         List<Period> periods1 = new ArrayList<>();
         educations.add(new Company("Coursera", "https://www.coursera.org/course/progfun", periods1));
-        periods1.add(new Period("'Functional Programming Principles in Scala' by Martin Odersky", "",
+        periods1.add(new Period("'Functional Programming Principles in Scala' by Martin Odersky", "Описание должностных обязанностей",
                 LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 1)));
 
         List<Period> periods2 = new ArrayList<>();
         educations.add(new Company("Luxoft", "https://www.luxoft-training.ru/training/catalog/course.html?ID=22366", periods2));
-        periods2.add(new Period("Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", "",
+        periods2.add(new Period("Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", "Описание должностных обязанностей",
                 LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 1)));
 
         List<Period> periods3 = new ArrayList<>();
         educations.add(new Company("Санкт-Петербургский национальный исследовательский университет информационных" +
                 " технологий, механики и оптики", "https://itmo.ru/", periods3));
-        periods3.add(new Period("Аспирантура (программист С, С++)", "",
+        periods3.add(new Period("Аспирантура (программист С, С++)", "Описание должностных обязанностей",
                 LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1)));
-        periods3.add(new Period("Инженер (программист Fortran, C)", "",
+        periods3.add(new Period("Инженер (программист Fortran, C)", "Описание должностных обязанностей",
                 LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1)));
 
         resume.addSection(SectionType.EDUCATION, new CompanySection(educations));

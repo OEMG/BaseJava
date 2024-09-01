@@ -27,7 +27,7 @@ public final class Period implements Serializable {
     @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
     @JsonAdapter(JsonSectionAdapter.class)
     private LocalDate endDate;
-
+    public static final Period EMPTY = new Period();
     public Period() {
     }
 

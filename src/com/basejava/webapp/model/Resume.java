@@ -13,6 +13,17 @@ public class Resume implements Serializable, Comparable<Resume> {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public static final Resume EMPTY = new Resume();
+
+    static {
+        EMPTY.addSection(SectionType.OBJECTIVE, TextSection.EMPTY);
+        EMPTY.addSection(SectionType.PERSONAL, TextSection.EMPTY);
+        EMPTY.addSection(SectionType.ACHIEVEMENT, ListSection.EMPTY);
+        EMPTY.addSection(SectionType.QUALIFICATIONS, ListSection.EMPTY);
+        EMPTY.addSection(SectionType.EXPERIENCE, CompanySection.EMPTY);
+        EMPTY.addSection(SectionType.EDUCATION, CompanySection.EMPTY);
+    }
+
     private String uuid;
     private String fullName;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
@@ -48,12 +59,24 @@ public class Resume implements Serializable, Comparable<Resume> {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
     public Map<SectionType, AbstractSection> getSections() {
         return sections;
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
     }
 
     @Override

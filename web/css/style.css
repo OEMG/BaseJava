@@ -1,27 +1,131 @@
-html {
+html, body {
     height: 100%;
-    text-align: center;
+    margin: 0;
 }
 
 body {
-    margin: 0;
-    color: #ea0808;
-    min-height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+section {
+    width: max-content;
+    margin: auto;
 }
 
 header {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
-    font-size: 20px;
-    padding: 5px 20px;
+    background-color: #2E6E9E;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 footer {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
-    font-size: 20px;
-    padding: 5px 20px;
-    margin: 20px 0;
+    background-color: #52a95a;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    text-align: center;
+    margin-top: auto;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: #2E6E9E;
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #fff;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 5px solid #fff;
+    border-top: 5px solid #fff;
+    border-bottom: 3px solid #fff;
+    border-collapse: collapse;
+    outline: 3px solid #ffd300;
+    font-size: 15px;
+    background: #fff!important;
+}
+
+table th {
+    font-weight: bold;
+    padding: 7px;
+    background: #ffd300;
+    border: none;
+    text-align: left;
+    font-size: 15px;
+    border-top: 3px solid #fff;
+    border-bottom: 3px solid #ffd300;
+}
+
+table td {
+    padding: 7px;
+    border: none;
+    border-top: 3px solid #fff;
+    border-bottom: 3px solid #fff;
+    font-size: 15px;
+}
+
+table tbody tr:nth-child(even){
+    background: #f8f8f8!important;
+}
+
+h2, h3 {
+    margin: 15px 0 5px;
+}
+
+img {
+    width: 36px;
+    height: 36px;
+}
+
+li {
+    margin: 15px 0;
+}
+
+/*a[href^="add:"] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/skype.png) no-repeat center left;*/
+/*}*/
+
+/*a[href^="skype:"] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/skype.png) no-repeat center left;*/
+/*}*/
+
+/*a[href^="mailto:"] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/email.png) no-repeat center left;*/
+/*}*/
+
+/*a[href^="https://stackoverflow.com"] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/so.png) no-repeat center left;*/
+/*}*/
+
+/*a[href^="https://www.linkedin.com"] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/lin.png) no-repeat center left;*/
+/*}*/
+
+/*a[href*="github."] {*/
+/*    padding-left: 20px !important;*/
+/*    background: url(../img/gh.png) no-repeat center left;*/
+/*}*/
